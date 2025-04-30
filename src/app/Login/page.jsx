@@ -163,7 +163,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Container from "@/components/Container";
 import Navbar from "@/components/Navbar";
-
+import SignIn from '@/components/SignIn'
 export default function LoginPage() {
   const router = useRouter();
 
@@ -206,7 +206,7 @@ export default function LoginPage() {
 
       if (res.ok) {
         // Save JWT Token to localStorage or cookies
-        localStorage.setItem("authToken", data.token);
+        localStorage.setItem("authToken", email);
         setMessage("Login successful!");
         router.push("/DashboardTabs"); // Redirect to Dashboard
       } else {
@@ -228,6 +228,7 @@ export default function LoginPage() {
               <h1 className="text-2xl md:text-2xl font-bold mb-4 md:mb-6 text-center">Login</h1>
               <div className="w-[100px] h-1 bg-pink-500 mx-auto mt-2 rounded-full mb-5"></div>
 
+              <SignIn />
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                   <label className="block text-lg font-medium mb-2">Email</label>

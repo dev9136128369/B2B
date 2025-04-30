@@ -566,9 +566,6 @@
 
 
 
-
-
-
 // 'use client';
 
 // import { useSession, signIn, signOut } from 'next-auth/react';
@@ -578,7 +575,7 @@
 // import { FiSearch, FiShoppingCart, FiMenu, FiX } from "react-icons/fi";
 // import Link from 'next/link';
 // import Image from 'next/image';
-// import FormHam from '@/components/FormHam';
+// import { useRouter } from 'next/navigation';
 
 // const Navbar = ({ onSearch, onProductClick }) => {
 //   const { data: session } = useSession();
@@ -597,12 +594,10 @@
 //   return (
 //     <header className={`${styles.header} py-3 px-1`}>
 //       <Container className='flex justify-between items-center'>
-//         {/* Logo */}
 //         <div className='flex items-center'>
 //           <span className='text-custom-orange font-bold text-4xl'>UpSale<b className='text-white'>.</b></span>
 //         </div>
 
-//         {/* Search Bar */}
 //         <div className={`${styles.searchBar} hidden md:flex items-center`}>
 //           <form onSubmit={handleSearch} className="flex">
 //             <input
@@ -618,19 +613,16 @@
 //           </form>
 //         </div>
 
-//         {/* Mobile Menu Button */}
 //         <div className="md:hidden flex items-center">
 //           <button onClick={toggleMobileMenu} className="text-black focus:outline-none">
 //             {isMobileMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
 //           </button>
 //         </div>
 
-//         {/* Desktop Navigation */}
 //         <div className="hidden md:flex">
 //           <NavBar session={session} />
 //         </div>
 
-//         {/* Mobile Navigation */}
 //         {isMobileMenuOpen && (
 //           <div className="md:hidden bg-white shadow-lg">
 //             <div className="px-4 py-2">
@@ -646,7 +638,7 @@
 // const NavBar = ({ isMobile = false, session }) => {
 //   const [localEmail, setLocalEmail] = useState(null);
 //   const [showDropdown, setShowDropdown] = useState(false);
-//   const [showFormComponent, setShowFormComponent] = useState(false);
+//   const router = useRouter();
 
 //   useEffect(() => {
 //     if (typeof window !== 'undefined') {
@@ -659,7 +651,7 @@
 
 //   const handleLogout = () => {
 //     if (session) {
-//       signOut(); // NextAuth logout
+//       signOut();
 //     } else {
 //       localStorage.removeItem('email');
 //       localStorage.removeItem('authToken');
@@ -669,8 +661,8 @@
 //   };
 
 //   const handleFormClick = () => {
-//     setShowFormComponent(true);
-//     setShowDropdown(false); // close dropdown when form opens
+//     setShowDropdown(false);
+//     router.push('/form-hamburger');
 //   };
 
 //   return (
@@ -704,7 +696,6 @@
 //               Logout
 //             </button>
 
-//             {/* Hamburger Icon */}
 //             <button 
 //               onClick={() => setShowDropdown(!showDropdown)} 
 //               className="ml-2 text-black focus:outline-none"
@@ -712,7 +703,6 @@
 //               <FiMenu size={22} />
 //             </button>
 
-//             {/* Dropdown */}
 //             {showDropdown && (
 //               <div className="absolute top-12 right-0 bg-white shadow-lg rounded-md w-40 p-2 z-50">
 //                 <button 
@@ -721,13 +711,6 @@
 //                 >
 //                   Form
 //                 </button>
-//               </div>
-//             )}
-
-//             {/* Form Component */}
-//             {showFormComponent && (
-//               <div className="absolute top-[70px] right-0 bg-white shadow-xl rounded-md p-4 z-50 w-96">
-//                 <FormHam />
 //               </div>
 //             )}
 //           </li>
@@ -757,13 +740,6 @@
 // };
 
 // export default Navbar;
-
-
-
-
-
-
-
 
 
 
@@ -850,8 +826,9 @@ const NavBar = ({ isMobile = false, session }) => {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const email = localStorage.getItem('authToken');
-      setLocalEmail(email);
+      const user = JSON.parse(localStorage.getItem('user'));
+      const email = user?.email || localStorage.getItem('authToken');
+      if (email) setLocalEmail(email);
     }
   }, []);
 
@@ -868,23 +845,17 @@ const NavBar = ({ isMobile = false, session }) => {
     }
   };
 
-  const handleFormClick = () => {
+  const handleRoute = (path) => {
     setShowDropdown(false);
-    router.push('/form-hamburger');
+    router.push(path);
   };
 
   return (
     <nav className={`flex ${isMobile ? 'flex-col' : 'items-center gap-5'}`}>
       <ul className={`flex ${isMobile ? 'flex-col gap-2' : 'items-center gap-7'} font-semibold`}>
-        <li className={styles.navLink}>
-          <Link href={"/partner-form"}>Partner</Link>
-        </li>
-        <li className={styles.navLink}>
-          <Link href={"/supplier-form"}>Supplier</Link>
-        </li>
-        <li className={styles.navLink}>
-          <Link href={"/contact"}>Contact Us</Link>
-        </li>
+        <li className={styles.navLink}><Link href="/partner-form">Partner</Link></li>
+        <li className={styles.navLink}><Link href="/supplier-form">Supplier</Link></li>
+        <li className={styles.navLink}><Link href="/contact">Contact Us</Link></li>
 
         {isLoggedIn ? (
           <li className="flex items-center gap-2 relative">
@@ -914,10 +885,22 @@ const NavBar = ({ isMobile = false, session }) => {
             {showDropdown && (
               <div className="absolute top-12 right-0 bg-white shadow-lg rounded-md w-40 p-2 z-50">
                 <button 
-                  onClick={handleFormClick}
+                  onClick={() => handleRoute('/form-hamburger')}
                   className="w-full text-left hover:bg-gray-100 px-3 py-2 rounded"
                 >
                   Form
+                </button>
+                <button 
+                  onClick={() => handleRoute('/Manage_Profile')}
+                  className="w-full text-left hover:bg-gray-100 px-3 py-2 rounded"
+                >
+                  Manage Profile
+                </button>
+                <button 
+                  onClick={() => handleRoute('/user-lead')}
+                  className="w-full text-left hover:bg-gray-100 px-3 py-2 rounded"
+                >
+                  User Lead
                 </button>
               </div>
             )}
@@ -925,20 +908,10 @@ const NavBar = ({ isMobile = false, session }) => {
         ) : (
           <>
             <li>
-              <Link 
-                href={"/Login"} 
-                className="bg-blue-500 py-1 px-4 rounded text-white hover:bg-blue-600"
-              >
-                Login
-              </Link>
+              <Link href="/Login" className="bg-blue-500 py-1 px-4 rounded text-white hover:bg-blue-600">Login</Link>
             </li>
             <li>
-              <Link 
-                href={"/SignUp"} 
-                className="bg-blue-500 py-1 px-4 rounded text-white hover:bg-blue-600"
-              >
-                Sign Up
-              </Link>
+              <Link href="/SignUp" className="bg-blue-500 py-1 px-4 rounded text-white hover:bg-blue-600">Sign Up</Link>
             </li>
           </>
         )}

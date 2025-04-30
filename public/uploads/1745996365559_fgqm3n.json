@@ -1,0 +1,42 @@
+[
+    {
+        "name": "Alice Smith",
+        "email": "test.user1@gmail.com"
+    },
+    {
+        "name": "Bob Johnson",
+        "email": "dummy.account2@gmail.com"
+    },
+    {
+        "name": "Charlie Lee",
+        "email": "sample.email3@gmail.com"
+    },
+    {
+        "name": "Diana Prince",
+        "email": "fake.name4@gmail.com"
+    },
+    {
+        "name": "Ethan Hunt",
+        "email": "john.doe.testing5@gmail.com"
+    },
+    {        
+	"name": "Fiona Gallagher",
+        "email": "alpha.tester6@gmail.com"
+    },
+    {        
+	"name": "George Clark",
+        "email": "demo.user7@gmail.com"
+    },
+    {        
+	"name": "Hannah Brown",
+        "email": "placeholder.email8@gmail.com"
+    },
+    {        
+	"name": "Ian Wright",
+        "email": "qa.account9@gmail.com"
+    },
+    {        
+	"name": "Julia Davis",
+        "email": "mock.user10@gmail.com"
+    }
+]

@@ -55,7 +55,7 @@ export default function SignIn() {
     try {
       const result = await signIn("google", { 
         redirect: false,
-        callbackUrl: "/dashboard" 
+        callbackUrl: "/DashboardTabs" 
       });
 
       if (result?.error) {

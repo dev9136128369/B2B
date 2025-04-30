@@ -2,12 +2,15 @@
 import mongoose from 'mongoose';
 
 const leadSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true },
-  mobile: { type: String, required: true },
-  type: { type: String, default: 'Leap' },
+  name: String,
+  email: String,
+  mobile: String,
+  status: {
+    type: String,
+    enum: ['Pending', 'Won'],
+    default: 'Pending',
+  },
 });
 
 const Lead = mongoose.models.Lead || mongoose.model('Lead', leadSchema);
-
 export default Lead;
