@@ -61,6 +61,7 @@
 'use client'; // Add this if you make the entire layout client-side
 
 import { SessionProvider } from 'next-auth/react';
+// import PopupForm2 from '../components/PopupForm2';
 // ... other imports
 
 export default function RootLayout({ children }) {
@@ -70,7 +71,8 @@ export default function RootLayout({ children }) {
         <SessionProvider>
           <Navbar />
           {children}
-          <PopupForm />
+          {/* <PopupForm /> */}
+          <PopupForm2 />
           <Footer />
         </SessionProvider>
       </body>

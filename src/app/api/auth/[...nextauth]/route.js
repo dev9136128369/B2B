@@ -31,6 +31,51 @@
 
 // app/api/auth/[...nextauth]/route.js
 // app/api/auth/[...nextauth]/route.js
+
+
+
+
+
+
+
+
+
+
+
+//yashveer
+
+// import NextAuth from "next-auth";
+// import GoogleProvider from "next-auth/providers/google";
+
+// export const authOptions = {
+//   providers: [
+//     GoogleProvider({
+//       clientId: process.env.GOOGLE_CLIENT_ID,
+//       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+//       authorization: {
+//         params: {
+//           prompt: "select_account", // Yeh line multiple accounts show karne ke liye
+//           access_type: "offline",
+//           response_type: "code"
+//         }
+//       }
+//     })
+//   ],
+//   secret: process.env.NEXTAUTH_SECRET
+// };
+
+// const handler = NextAuth(authOptions);
+// export { handler as GET, handler as POST };
+
+
+
+
+
+
+
+
+
+//sagar
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
@@ -41,13 +86,31 @@ export const authOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       authorization: {
         params: {
-          prompt: "select_account", // Yeh line multiple accounts show karne ke liye
+          prompt: "select_account",
           access_type: "offline",
           response_type: "code"
         }
       }
     })
   ],
+  callbacks: {
+    async jwt({ token, user }) {
+      // User data ko token mein add karo
+      if (user) {
+        token.user = {
+          name: user.name,
+          email: user.email,
+          image: user.image
+        };
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      // Token se user data session mein add karo
+      session.user = token.user;
+      return session;
+    }
+  },
   secret: process.env.NEXTAUTH_SECRET
 };
 

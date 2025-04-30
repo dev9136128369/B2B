@@ -22,4 +22,8 @@
       opacity: 0;
     }
   }
+  .input {
+    @apply w-full border p-2 rounded transition duration-300;
+  }
+  
  

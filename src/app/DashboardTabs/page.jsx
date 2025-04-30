@@ -63,9 +63,11 @@
 
 // export default DashboardTabs;
 
-"use client"
+"use client";
 import { useState, useEffect } from 'react';
-import Navbar from "@/components/Navbar"
+import Navbar from "@/components/Navbar";
+import axios from "axios"; // We'll use axios for API calls
+
 const DashboardTabs = () => {
   const [activeTab, setActiveTab] = useState('partners');
   const [partners, setPartners] = useState([]);
@@ -73,12 +75,21 @@ const DashboardTabs = () => {
   const [leapSuppliers, setLeapSuppliers] = useState([]);
 
   useEffect(() => {
-    const partnerData = JSON.parse(localStorage.getItem('partners')) || [];
-    const supplierData = JSON.parse(localStorage.getItem('suppliers')) || [];
+    const fetchData = async () => {
+      try {
+        const partnersRes = await axios.get('/api/send-partner');    // Assuming this is your route
+        const suppliersRes = await axios.get('/api/supplier');  // Assuming this is your route
+        const LeapSupplier = await axios.get('/api/send-leadData');
 
-    setPartners(partnerData);
-    setSuppliers(supplierData);
-    setLeapSuppliers(supplierData.filter(item => item.type === 'Leap')); // ✅ filter Leap only
+        setPartners(partnersRes.data || []);
+        setSuppliers(suppliersRes.data || []);
+        setLeapSuppliers(LeapSupplier.data || []);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const renderList = (data) =>
@@ -94,51 +105,51 @@ const DashboardTabs = () => {
 
   return (
     <>
-    <Navbar />
+      <Navbar />
 
-    <div className="max-w-6xl mx-auto mt-10 p-4">
-      <div className="flex border rounded-lg overflow-hidden shadow-md h-[500px]">
-        {/* Left Column - Tabs */}
-        <div className="w-1/4 bg-gray-100 p-4">
-          <h3 className="text-xl font-semibold mb-4">Dashboard</h3>
-          <div className="flex flex-col gap-2">
-            <button
-              className={`text-left px-4 py-2 rounded ${activeTab === 'partners' ? 'bg-blue-600 text-white' : 'bg-white border'}`}
-              onClick={() => setActiveTab('partners')}
-            >
-              Partners
-            </button>
-            <button
-              className={`text-left px-4 py-2 rounded ${activeTab === 'suppliers' ? 'bg-blue-600 text-white' : 'bg-white border'}`}
-              onClick={() => setActiveTab('suppliers')}
-            >
-              Clients / Suppliers
-            </button>
-            <button
-              className={`text-left px-4 py-2 rounded ${activeTab === 'leap' ? 'bg-blue-600 text-white' : 'bg-white border'}`}
-              onClick={() => setActiveTab('leap')}
-            >
-              Lead
-            </button>
+      <div className="max-w-6xl mx-auto mt-10 p-4">
+        <div className="flex border rounded-lg overflow-hidden shadow-md h-[500px]">
+          {/* Left Column - Tabs */}
+          <div className="w-1/4 bg-gray-100 p-4">
+            <h3 className="text-xl font-semibold mb-4">Dashboard</h3>
+            <div className="flex flex-col gap-2">
+              <button
+                className={`text-left px-4 py-2 rounded ${activeTab === 'partners' ? 'bg-blue-600 text-white' : 'bg-white border'}`}
+                onClick={() => setActiveTab('partners')}
+              >
+                Partners
+              </button>
+              <button
+                className={`text-left px-4 py-2 rounded ${activeTab === 'suppliers' ? 'bg-blue-600 text-white' : 'bg-white border'}`}
+                onClick={() => setActiveTab('suppliers')}
+              >
+                Clients / Suppliers
+              </button>
+              <button
+                className={`text-left px-4 py-2 rounded ${activeTab === 'leap' ? 'bg-blue-600 text-white' : 'bg-white border'}`}
+                onClick={() => setActiveTab('leap')}
+              >
+                Lead
+              </button>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="w-px bg-gray-300"></div>
+
+          {/* Right Column - Data */}
+          <div className="w-3/4 p-6 overflow-y-auto">
+            <h3 className="text-xl font-semibold mb-4">
+              {activeTab === 'partners' && 'Partners List'}
+              {activeTab === 'suppliers' && 'Clients / Suppliers List'}
+              {activeTab === 'leap' && 'Leap Suppliers List'}
+            </h3>
+            {activeTab === 'partners' && renderList(partners)}
+            {activeTab === 'suppliers' && renderList(suppliers)}
+            {activeTab === 'leap' && renderList(leapSuppliers)}
           </div>
         </div>
-
-        {/* Divider */}
-        <div className="w-px bg-gray-300"></div>
-
-        {/* Right Column - Data */}
-        <div className="w-3/4 p-6 overflow-y-auto">
-          <h3 className="text-xl font-semibold mb-4">
-            {activeTab === 'partners' && 'Partners List'}
-            {activeTab === 'suppliers' && 'Clients / Suppliers List'}
-            {activeTab === 'leap' && 'Leap Suppliers List'}
-          </h3>
-          {activeTab === 'partners' && renderList(partners)}
-          {activeTab === 'suppliers' && renderList(suppliers)}
-          {activeTab === 'leap' && renderList(leapSuppliers)}
-        </div>
       </div>
-    </div>
     </>
   );
 };

@@ -569,6 +569,210 @@
 
 
 
+// 'use client';
+
+// import { useSession, signIn, signOut } from 'next-auth/react';
+// import { useState, useEffect } from 'react';
+// import styles from "@/styles/header.module.css";
+// import Container from "./Container";
+// import { FiSearch, FiShoppingCart, FiMenu, FiX } from "react-icons/fi";
+// import Link from 'next/link';
+// import Image from 'next/image';
+// import FormHam from '@/components/FormHam';
+
+// const Navbar = ({ onSearch, onProductClick }) => {
+//   const { data: session } = useSession();
+//   const [searchQuery, setSearchQuery] = useState("");
+//   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+//   const handleSearch = (e) => {
+//     e.preventDefault();
+//     onSearch(searchQuery);
+//   };
+
+//   const toggleMobileMenu = () => {
+//     setIsMobileMenuOpen(!isMobileMenuOpen);
+//   };
+
+//   return (
+//     <header className={`${styles.header} py-3 px-1`}>
+//       <Container className='flex justify-between items-center'>
+//         {/* Logo */}
+//         <div className='flex items-center'>
+//           <span className='text-custom-orange font-bold text-4xl'>UpSale<b className='text-white'>.</b></span>
+//         </div>
+
+//         {/* Search Bar */}
+//         <div className={`${styles.searchBar} hidden md:flex items-center`}>
+//           <form onSubmit={handleSearch} className="flex">
+//             <input
+//               type='text'
+//               placeholder='Search for products...'
+//               className={styles.searchinput}
+//               value={searchQuery}
+//               onChange={(e) => setSearchQuery(e.target.value)}
+//             />
+//             <button type="submit" className={styles.searchButton}>
+//               <FiSearch size={18} />
+//             </button>
+//           </form>
+//         </div>
+
+//         {/* Mobile Menu Button */}
+//         <div className="md:hidden flex items-center">
+//           <button onClick={toggleMobileMenu} className="text-black focus:outline-none">
+//             {isMobileMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+//           </button>
+//         </div>
+
+//         {/* Desktop Navigation */}
+//         <div className="hidden md:flex">
+//           <NavBar session={session} />
+//         </div>
+
+//         {/* Mobile Navigation */}
+//         {isMobileMenuOpen && (
+//           <div className="md:hidden bg-white shadow-lg">
+//             <div className="px-4 py-2">
+//               <NavBar isMobile session={session} />
+//             </div>
+//           </div>
+//         )}
+//       </Container>
+//     </header>
+//   );
+// };
+
+// const NavBar = ({ isMobile = false, session }) => {
+//   const [localEmail, setLocalEmail] = useState(null);
+//   const [showDropdown, setShowDropdown] = useState(false);
+//   const [showFormComponent, setShowFormComponent] = useState(false);
+
+//   useEffect(() => {
+//     if (typeof window !== 'undefined') {
+//       const email = localStorage.getItem('authToken');
+//       setLocalEmail(email);
+//     }
+//   }, []);
+
+//   const isLoggedIn = session || localEmail;
+
+//   const handleLogout = () => {
+//     if (session) {
+//       signOut(); // NextAuth logout
+//     } else {
+//       localStorage.removeItem('email');
+//       localStorage.removeItem('authToken');
+//       localStorage.removeItem('user');
+//       window.location.reload();
+//     }
+//   };
+
+//   const handleFormClick = () => {
+//     setShowFormComponent(true);
+//     setShowDropdown(false); // close dropdown when form opens
+//   };
+
+//   return (
+//     <nav className={`flex ${isMobile ? 'flex-col' : 'items-center gap-5'}`}>
+//       <ul className={`flex ${isMobile ? 'flex-col gap-2' : 'items-center gap-7'} font-semibold`}>
+//         <li className={styles.navLink}>
+//           <Link href={"/partner-form"}>Partner</Link>
+//         </li>
+//         <li className={styles.navLink}>
+//           <Link href={"/supplier-form"}>Supplier</Link>
+//         </li>
+//         <li className={styles.navLink}>
+//           <Link href={"/contact"}>Contact Us</Link>
+//         </li>
+
+//         {isLoggedIn ? (
+//           <li className="flex items-center gap-2 relative">
+//             {session?.user?.image && (
+//               <Image 
+//                 src={session.user.image} 
+//                 alt="Profile" 
+//                 width={32} 
+//                 height={32}
+//                 className="rounded-full"
+//               />
+//             )}
+//             <button 
+//               onClick={handleLogout}
+//               className="bg-blue-500 py-1 px-4 rounded text-white hover:bg-blue-600"
+//             >
+//               Logout
+//             </button>
+
+//             {/* Hamburger Icon */}
+//             <button 
+//               onClick={() => setShowDropdown(!showDropdown)} 
+//               className="ml-2 text-black focus:outline-none"
+//             >
+//               <FiMenu size={22} />
+//             </button>
+
+//             {/* Dropdown */}
+//             {showDropdown && (
+//               <div className="absolute top-12 right-0 bg-white shadow-lg rounded-md w-40 p-2 z-50">
+//                 <button 
+//                   onClick={handleFormClick}
+//                   className="w-full text-left hover:bg-gray-100 px-3 py-2 rounded"
+//                 >
+//                   Form
+//                 </button>
+//               </div>
+//             )}
+
+//             {/* Form Component */}
+//             {showFormComponent && (
+//               <div className="absolute top-[70px] right-0 bg-white shadow-xl rounded-md p-4 z-50 w-96">
+//                 <FormHam />
+//               </div>
+//             )}
+//           </li>
+//         ) : (
+//           <>
+//             <li>
+//               <Link 
+//                 href={"/Login"} 
+//                 className="bg-blue-500 py-1 px-4 rounded text-white hover:bg-blue-600"
+//               >
+//                 Login
+//               </Link>
+//             </li>
+//             <li>
+//               <Link 
+//                 href={"/SignUp"} 
+//                 className="bg-blue-500 py-1 px-4 rounded text-white hover:bg-blue-600"
+//               >
+//                 Sign Up
+//               </Link>
+//             </li>
+//           </>
+//         )}
+//       </ul>
+//     </nav>
+//   );
+// };
+
+// export default Navbar;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 'use client';
 
@@ -579,6 +783,7 @@ import Container from "./Container";
 import { FiSearch, FiShoppingCart, FiMenu, FiX } from "react-icons/fi";
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 const Navbar = ({ onSearch, onProductClick }) => {
   const { data: session } = useSession();
@@ -597,12 +802,10 @@ const Navbar = ({ onSearch, onProductClick }) => {
   return (
     <header className={`${styles.header} py-3 px-1`}>
       <Container className='flex justify-between items-center'>
-        {/* Logo */}
         <div className='flex items-center'>
           <span className='text-custom-orange font-bold text-4xl'>UpSale<b className='text-white'>.</b></span>
         </div>
 
-        {/* Search Bar */}
         <div className={`${styles.searchBar} hidden md:flex items-center`}>
           <form onSubmit={handleSearch} className="flex">
             <input
@@ -618,19 +821,16 @@ const Navbar = ({ onSearch, onProductClick }) => {
           </form>
         </div>
 
-        {/* Mobile Menu Button */}
         <div className="md:hidden flex items-center">
           <button onClick={toggleMobileMenu} className="text-black focus:outline-none">
             {isMobileMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
           </button>
         </div>
 
-        {/* Desktop Navigation */}
         <div className="hidden md:flex">
           <NavBar session={session} />
         </div>
 
-        {/* Mobile Navigation */}
         {isMobileMenuOpen && (
           <div className="md:hidden bg-white shadow-lg">
             <div className="px-4 py-2">
@@ -645,6 +845,8 @@ const Navbar = ({ onSearch, onProductClick }) => {
 
 const NavBar = ({ isMobile = false, session }) => {
   const [localEmail, setLocalEmail] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -657,12 +859,18 @@ const NavBar = ({ isMobile = false, session }) => {
 
   const handleLogout = () => {
     if (session) {
-      signOut(); // NextAuth logout
+      signOut();
     } else {
       localStorage.removeItem('email');
-      localStorage.removeItem('authToken'); // if you are saving token too
-      window.location.reload(); // reload page to reflect logout
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
+      window.location.reload();
     }
+  };
+
+  const handleFormClick = () => {
+    setShowDropdown(false);
+    router.push('/form-hamburger');
   };
 
   return (
@@ -679,7 +887,7 @@ const NavBar = ({ isMobile = false, session }) => {
         </li>
 
         {isLoggedIn ? (
-          <li className="flex items-center gap-4">
+          <li className="flex items-center gap-2 relative">
             {session?.user?.image && (
               <Image 
                 src={session.user.image} 
@@ -695,6 +903,24 @@ const NavBar = ({ isMobile = false, session }) => {
             >
               Logout
             </button>
+
+            <button 
+              onClick={() => setShowDropdown(!showDropdown)} 
+              className="ml-2 text-black focus:outline-none"
+            >
+              <FiMenu size={22} />
+            </button>
+
+            {showDropdown && (
+              <div className="absolute top-12 right-0 bg-white shadow-lg rounded-md w-40 p-2 z-50">
+                <button 
+                  onClick={handleFormClick}
+                  className="w-full text-left hover:bg-gray-100 px-3 py-2 rounded"
+                >
+                  Form
+                </button>
+              </div>
+            )}
           </li>
         ) : (
           <>

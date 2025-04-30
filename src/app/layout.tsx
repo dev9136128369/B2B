@@ -42,8 +42,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import PopupForm from '@/components/PopupForm';
-import Popup from '@/components/Popup';
+import PopupForm2 from '@/components/PopupForm2';
 
+import Popup from '@/components/Popup';
+import UserDataHandler from '@/components/UserDataHandler';
 import Footer from "@/components/Footer";
 // import Navbar from "@/components/Navbar";
 import AuthProvider from '@/components/AuthProvider';
@@ -73,8 +75,11 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
           {/* <Navbar /> */}
+          
+          <UserDataHandler />
+
           {children}
-         
+          <PopupForm2 />
           <PopupForm />
           <Popup />
           <Footer />
