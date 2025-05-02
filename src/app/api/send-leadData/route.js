@@ -232,23 +232,30 @@
 
 
 
-// app/api/send-leadData/route.js
 import connectMongo from '@/app/lib/mongodb';
 import Lead from '@/models/Lead';
 import nodemailer from 'nodemailer';
 
 export async function POST(request) {
   try {
-    const { name, email, mobile } = await request.json();
+    const body = await request.json();
+    const { name, email, mobile, type } = body;
 
-    if (!name || !email || !mobile) throw new Error('Missing required fields');
+    if (!name || !email || !mobile || !type) throw new Error('Missing required fields');
 
     await connectMongo();
 
-    const newUser = new Lead({ name, email, mobile, status: 'Pending' });
+    const newUser = new Lead({
+      name,
+      email,
+      mobile,
+      type,
+      status: 'Pending',
+    });
+
     await newUser.save();
 
-    // Send email (optional)
+    // Optional: send email notification
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 587,

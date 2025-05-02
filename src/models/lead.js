@@ -1,16 +1,16 @@
-// models/Lead.js
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const leadSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  mobile: String,
-  status: {
-    type: String,
-    enum: ['Pending', 'Won'],
-    default: 'Pending',
+const LeadSchema = new mongoose.Schema(
+  {
+    name: String,
+    email: String,
+    mobile: String,
+    city: String,
+    status: { type: String, default: "Pending" },
+    reason: { type: String, default: "" },
+    updatedBy: { type: String, default: "" },
   },
-});
+  { timestamps: true }
+);
 
-const Lead = mongoose.models.Lead || mongoose.model('Lead', leadSchema);
-export default Lead;
+export default mongoose.models.Lead || mongoose.model("Lead", LeadSchema);
